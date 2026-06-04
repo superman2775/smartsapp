@@ -1,0 +1,70 @@
+.compose {
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  gap: 8px;
+}
+
+[data-theme="light"] .compose {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+@supports (backdrop-filter: blur(20px)) {
+  .compose {
+    border: none;
+    backdrop-filter: blur(20px);
+  }
+}
+
+.input {
+  flex: 1;
+  border: none;
+  font-size: 14px;
+  height: 36px;
+  background: var(--bg-input);
+  border-radius: 20px;
+  padding: 0 16px;
+  color: var(--text-primary);
+}
+
+.input::placeholder {
+  opacity: 0.4;
+  color: var(--text-dim);
+}
+
+.sendButton {
+  background: var(--accent);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+  padding: 0;
+  color: white;
+}
+
+.sendButton:hover {
+  background: var(--accent-hover);
+  transform: scale(1.05);
+}
+
+.sendButton:active {
+  transform: scale(0.95);
+}
+
+.sendButton:disabled {
+  background: var(--disabled-bg);
+  cursor: default;
+  transform: none;
+}
+
+.sendButton:disabled:hover {
+  background: var(--disabled-bg);
+}

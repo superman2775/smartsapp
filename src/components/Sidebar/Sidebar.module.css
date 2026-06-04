@@ -1,0 +1,64 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 56px;
+  height: 100vh;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border-color);
+  padding: 12px 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: white;
+  margin-bottom: 8px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.btn:active {
+  transform: scale(0.92);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}

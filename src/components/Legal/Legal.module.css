@@ -1,0 +1,73 @@
+.screen {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--bg-primary);
+  padding: 24px 16px 64px;
+}
+
+.card {
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  padding: 32px 28px;
+  max-width: 680px;
+  width: 100%;
+  box-shadow: var(--shadow-md);
+  animation: fadeInUp 0.35s ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.back {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.15s;
+}
+
+.back:hover {
+  color: var(--accent-hover);
+}
+
+.card h1 {
+  margin: 0 0 4px;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.date {
+  margin: 0 0 28px;
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+.card section {
+  margin-bottom: 24px;
+}
+
+.card h2 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}

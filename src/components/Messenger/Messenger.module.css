@@ -1,0 +1,50 @@
+.messenger {
+  display: grid;
+  width: 100%;
+  height: 100vh;
+  background: var(--border-color);
+  grid-template-columns: 56px 350px auto;
+  grid-template-rows: 100%;
+  grid-column-gap: 1px;
+}
+
+.scrollable {
+  position: relative;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.sidebar {
+  background: var(--bg-secondary);
+  height: 100vh;
+}
+
+.content {
+  background: var(--bg-secondary);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.noConversation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.noConversation h2 {
+  margin: 16px 0 4px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.noConversation p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-dim);
+}

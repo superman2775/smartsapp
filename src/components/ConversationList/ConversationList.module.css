@@ -1,0 +1,93 @@
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.userSearchPanel {
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-tertiary);
+}
+
+.userSearchHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.userSearchClose {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.userSearchClose:hover {
+  color: var(--text-primary);
+}
+
+.userSearchEmpty {
+  padding: 16px;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 13px;
+  margin: 0;
+}
+
+.userSearchList {
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.userSearchItem {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  transition: background 0.15s ease;
+}
+
+.userSearchItem:hover {
+  background: var(--bg-hover);
+}
+
+.userSearchItem .userPhoto {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  margin-right: 10px;
+}
+
+.userSearchItem .userInfo {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.userSearchItem .userName {
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: capitalize;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-primary);
+}
+
+.userSearchItem .userEmail {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 2px 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

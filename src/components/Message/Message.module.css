@@ -1,0 +1,63 @@
+.message {
+  display: flex;
+  flex-direction: column;
+}
+
+.timestamp {
+  display: flex;
+  justify-content: center;
+  color: var(--text-dim);
+  font-weight: 600;
+  font-size: 12px;
+  margin: 10px 0;
+  text-transform: uppercase;
+}
+
+.bubbleContainer {
+  font-size: 14px;
+  display: flex;
+}
+
+.bubble {
+  margin: 1px 0;
+  background: var(--bubble-other);
+  color: var(--bubble-other-text);
+  padding: 10px 15px;
+  border-radius: 20px;
+  max-width: 75%;
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.mine .bubbleContainer {
+  justify-content: flex-end;
+}
+
+.mine .bubble {
+  background: var(--bubble-mine);
+  color: var(--bubble-mine-text);
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+}
+
+.start .bubble {
+  border-top-left-radius: 20px;
+}
+
+.end .bubble {
+  border-bottom-left-radius: 20px;
+}
+
+.mine.start .bubble {
+  margin-top: 10px;
+  border-top-right-radius: 20px;
+}
+
+.mine.end .bubble {
+  border-bottom-right-radius: 20px;
+  margin-bottom: 10px;
+}

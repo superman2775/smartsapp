@@ -1,0 +1,80 @@
+.photoWrapper {
+  position: relative;
+  flex-shrink: 0;
+  margin-right: 10px;
+}
+
+.photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.onlineDot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: var(--online-color);
+  border: 2px solid var(--bg-secondary);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.05);
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.topRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: capitalize;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-primary);
+}
+
+.time {
+  font-size: 11px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.snippet {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 2px 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  transition: background 0.15s ease;
+}
+
+.item:hover {
+  background: var(--bg-hover);
+  cursor: pointer;
+}
+
+.active {
+  background: var(--bg-active);
+}

@@ -1,0 +1,207 @@
+.screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 24px;
+}
+
+.card {
+  background: var(--bg-secondary);
+  border-radius: 20px;
+  padding: 40px 36px 36px;
+  max-width: 440px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.title {
+  margin: 0 0 4px;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* ── Photo section ── */
+
+.photoSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.photoWrap {
+  position: relative;
+}
+
+.uploadOverlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.uploadSpinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.uploadPct {
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+}
+
+.uploadBtn {
+  padding: 8px 20px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.uploadBtn:hover {
+  background: var(--accent-hover);
+}
+
+.uploadBtn:disabled {
+  background: var(--disabled-bg);
+  cursor: default;
+}
+
+/* ── Form fields ── */
+
+.field {
+  margin-bottom: 18px;
+}
+
+.label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid var(--border-input);
+  border-radius: 10px;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.input:focus {
+  border-color: var(--accent);
+  background: var(--bg-secondary);
+  outline: none;
+}
+
+.textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid var(--border-input);
+  border-radius: 10px;
+  font-size: 14px;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 72px;
+  font-family: inherit;
+  transition: border-color 0.15s;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.textarea:focus {
+  border-color: var(--accent);
+  background: var(--bg-secondary);
+  outline: none;
+}
+
+.hint {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+/* ── Submit ── */
+
+.submitBtn {
+  width: 100%;
+  padding: 12px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-top: 8px;
+}
+
+.submitBtn:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.submitBtn:active {
+  transform: translateY(0);
+}
+
+.submitBtn:disabled {
+  background: var(--disabled-bg);
+  cursor: default;
+  transform: none;
+}
+
+.errorMsg {
+  color: var(--danger-color);
+  font-size: 13px;
+  text-align: center;
+  margin-top: 12px;
+}

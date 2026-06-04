@@ -1,0 +1,16 @@
+.toolbarButton {
+  color: var(--accent);
+  font-size: 28px;
+  transition: all 0.1s;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.toolbarButton:hover {
+  color: var(--accent-hover);
+}
+
+.toolbarButton:active {
+  opacity: 0.25;
+}
