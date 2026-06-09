@@ -12,9 +12,10 @@ interface Props {
   user: UserData;
   conversation: Conversation & { otherUid?: string; otherName?: string; otherPhoto?: string };
   isOtherOnline: boolean;
+  lastViewedAt?: Date;
 }
 
-export default function MessageList({ user, conversation, isOtherOnline }: Props) {
+export default function MessageList({ user, conversation, isOtherOnline, lastViewedAt }: Props) {
   const [messages, setMessages] = useState<MessageData[]>([]);
   const [typers, setTypers] = useState<Record<string, { timestamp: unknown }>>({});
   const containerRef = useRef<HTMLDivElement>(null);
@@ -51,6 +52,26 @@ export default function MessageList({ user, conversation, isOtherOnline }: Props
   const renderedMessages = useMemo(() => {
     const result: React.ReactNode[] = [];
     const count = messages.length;
+
+    const serverLastRead = conversation.lastReadTimestamps?.[user.uid];
+    const serverLastReadDate = serverLastRead ? toDate(serverLastRead) : null;
+
+    // Use the latest of local (immediate) and server (persisted) timestamps
+    let lastReadDate: Date | null = serverLastReadDate;
+    if (lastViewedAt && (!lastReadDate || lastViewedAt > lastReadDate)) {
+      lastReadDate = lastViewedAt;
+    }
+
+    // Find the first unread message from OTHER users (skip own messages)
+    let firstUnreadIdx = -1;
+    if (lastReadDate) {
+      for (let i = 0; i < count; i++) {
+        if (messages[i].senderId !== user.uid && toDate(messages[i].timestamp) > lastReadDate) {
+          firstUnreadIdx = i;
+          break;
+        }
+      }
+    }
 
     for (let i = 0; i < count; i++) {
       const previous = messages[i - 1];
@@ -97,10 +118,19 @@ export default function MessageList({ user, conversation, isOtherOnline }: Props
           data={current}
         />
       );
+
+      // Insert unread divider after the last read message
+      if (i === firstUnreadIdx - 1 && firstUnreadIdx < count) {
+        result.push(
+          <div key={`unread-divider-${firstUnreadIdx}`} className={styles.unreadDivider}>
+            <span>New messages</span>
+          </div>
+        );
+      }
     }
 
     return result;
-  }, [messages, user.uid]);
+  }, [messages, user.uid, conversation.lastReadTimestamps, lastViewedAt]);
 
   return (
     <div className={styles.list}>

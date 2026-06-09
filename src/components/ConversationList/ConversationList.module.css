@@ -75,7 +75,6 @@
 .userSearchItem .userName {
   font-size: 14px;
   font-weight: bold;
-  text-transform: capitalize;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -90,4 +89,111 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.userSearchItemSent {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.userSearchItemSent:hover {
+  background: transparent;
+}
+
+/* Friend Request Form */
+.requestForm {
+  padding: 16px;
+}
+
+.requestFormTarget {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.requestFormTarget .userInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.requestFormTarget .userName {
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.requestFormTarget .userEmail {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 2px 0 0;
+}
+
+.requestInput {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-input);
+  border-radius: 8px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-family: inherit;
+  resize: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
+}
+
+.requestInput:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.requestInput::placeholder {
+  color: var(--text-dim);
+}
+
+.requestActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  justify-content: flex-end;
+}
+
+.requestBackBtn {
+  padding: 7px 16px;
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.requestBackBtn:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+.requestSendBtn {
+  padding: 7px 16px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.requestSendBtn:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.requestSendBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

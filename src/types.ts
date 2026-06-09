@@ -17,6 +17,8 @@ export interface ConversationDoc {
   lastSenderId?: string;
   updatedAt?: Timestamp;
   createdAt?: Timestamp;
+  unreadCounts?: Record<string, number>;
+  lastReadTimestamps?: Record<string, Timestamp>;
 }
 
 export interface Conversation extends ConversationDoc {
@@ -52,10 +54,29 @@ export interface ConversationItemData {
   text: string;
   timestamp?: Timestamp;
   isOnline: boolean;
+  unreadCount?: number;
 }
 
 export interface TypingData {
   timestamp: Timestamp;
+}
+
+export interface FriendRequestDoc {
+  from: string;
+  to: string;
+  participants: string[];
+  fromName: string;
+  fromPhoto: string;
+  toName: string;
+  toPhoto: string;
+  message?: string;
+  status: 'pending' | 'accepted' | 'rejected';
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+export interface FriendRequest extends FriendRequestDoc {
+  id: string;
 }
 
 export type Page = 'login' | 'privacy' | 'terms' | 'onboarding' | 'profile' | 'messenger';

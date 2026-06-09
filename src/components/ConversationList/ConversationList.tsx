@@ -3,39 +3,43 @@ import ConversationSearch from '../ConversationSearch/ConversationSearch';
 import ConversationListItem from '../ConversationListItem/ConversationListItem';
 import Avatar from '../Avatar/Avatar';
 import Toolbar from '../Toolbar/Toolbar';
-import { subscribeConversations, getAllUsers, createConversation } from '../../services/firestore';
+import { getAllUsers, sendFriendRequest } from '../../services/firestore';
 import type { Conversation, OnlineUser, UserData } from '../../types';
 import clsStyles from './ConversationList.module.css';
 
 interface Props {
   user: UserData;
-  activeConversation: (Conversation & { otherUid?: string; otherName?: string; otherPhoto?: string }) | null;
-  onSelectConversation: (convo: Conversation & { otherUid?: string; otherName?: string; otherPhoto?: string }) => void;
+  conversations: Conversation[];
+  activeConversationId: string | null;
+  onSelectConversation: (convoId: string, tempOtherUid?: string, tempOtherName?: string, tempOtherPhoto?: string) => void;
+  onSendRequest?: () => void;
   onlineUsers: Record<string, OnlineUser>;
   newChatTrigger?: number;
 }
 
 export default function ConversationList({
   user,
-  activeConversation,
+  conversations,
+  activeConversationId,
   onSelectConversation,
+  onSendRequest,
   onlineUsers,
   newChatTrigger,
 }: Props) {
-  const [conversations, setConversations] = useState<Conversation[]>([]);
   const [showUserSearch, setShowUserSearch] = useState(false);
   const [allUsers, setAllUsers] = useState<OnlineUser[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-
-  useEffect(() => {
-    const unsubscribe = subscribeConversations(user.uid, setConversations);
-    return unsubscribe;
-  }, [user.uid]);
+  const [requestTarget, setRequestTarget] = useState<OnlineUser | null>(null);
+  const [requestMessage, setRequestMessage] = useState('');
+  const [sending, setSending] = useState(false);
+  const [sentIds, setSentIds] = useState<Set<string>>(new Set());
 
   const handleOpenNewChat = useCallback(async () => {
     const users = await getAllUsers(user.uid);
     setAllUsers(users);
     setSearchQuery('');
+    setRequestTarget(null);
+    setRequestMessage('');
     setShowUserSearch(true);
   }, [user.uid]);
 
@@ -46,26 +50,44 @@ export default function ConversationList({
     if (newChatTrigger) handleOpenNewChatRef.current();
   }, [newChatTrigger]);
 
-  const handleStartConversation = useCallback(
-    async (otherUser: OnlineUser) => {
-      const convoId = await createConversation(user, otherUser);
-      const newConvo: Conversation & { otherUid: string; otherName: string; otherPhoto: string } = {
-        id: convoId,
-        participants: [user.uid, otherUser.id],
-        participantNames: { [user.uid]: user.displayName ?? '', [otherUser.id]: otherUser.displayName ?? '' },
-        participantPhotos: { [user.uid]: user.photoURL ?? '', [otherUser.id]: otherUser.photoURL ?? '' },
-        otherUid: otherUser.id,
-        otherName: otherUser.displayName ?? 'Unknown',
-        otherPhoto: otherUser.photoURL ?? '',
-      };
-      setShowUserSearch(false);
-      onSelectConversation(newConvo);
+  const handleSelectUser = useCallback((otherUser: OnlineUser) => {
+    setRequestTarget(otherUser);
+    setRequestMessage('');
+  }, []);
+
+  const handleSendRequest = useCallback(
+    async () => {
+      if (!requestTarget) return;
+      setSending(true);
+      try {
+        await sendFriendRequest(
+          { uid: user.uid, displayName: user.displayName, photoURL: user.photoURL },
+          { uid: requestTarget.id, displayName: requestTarget.displayName, photoURL: requestTarget.photoURL },
+          requestMessage.trim() || undefined
+        );
+        setSentIds((prev) => new Set(prev).add(requestTarget.id));
+        setRequestTarget(null);
+        setRequestMessage('');
+        onSendRequest?.();
+      } catch (err: unknown) {
+        if (err instanceof Error && err.message === 'ALREADY_FRIENDS') {
+          alert('You are already friends with this user!');
+          setShowUserSearch(false);
+        } else {
+          alert('Failed to send friend request. Please try again.');
+        }
+      } finally {
+        setSending(false);
+      }
     },
-    [user, onSelectConversation]
+    [user, requestTarget, requestMessage, onSendRequest]
   );
 
-  const filteredUsers = allUsers.filter((u) =>
-    (u.displayName ?? '').toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredUsers = allUsers.filter(
+    (u) =>
+      (u.displayName ?? '').toLowerCase().includes(searchQuery.toLowerCase()) &&
+      u.id !== user.uid &&
+      !conversations.some((c) => c.participants.includes(u.id))
   );
 
   return (
@@ -76,29 +98,85 @@ export default function ConversationList({
       {showUserSearch && (
         <div className={clsStyles.userSearchPanel}>
           <div className={clsStyles.userSearchHeader}>
-            <span>New Chat</span>
-            <button className={clsStyles.userSearchClose} onClick={() => setShowUserSearch(false)}>
+            <span>{requestTarget ? 'Send Request' : 'New Chat'}</span>
+            <button
+              className={clsStyles.userSearchClose}
+              onClick={() => {
+                if (requestTarget) {
+                  setRequestTarget(null);
+                } else {
+                  setShowUserSearch(false);
+                }
+              }}
+            >
               &times;
             </button>
           </div>
-          <div className={clsStyles.userSearchList}>
-            {filteredUsers.length === 0 && (
-              <p className={clsStyles.userSearchEmpty}>No users found</p>
-            )}
-            {filteredUsers.map((u) => (
-              <div
-                key={u.id}
-                className={clsStyles.userSearchItem}
-                onClick={() => handleStartConversation(u)}
-              >
-                <Avatar src={u.photoURL} name={u.displayName} size={50} />
+
+          {!requestTarget ? (
+            <div className={clsStyles.userSearchList}>
+              {filteredUsers.length === 0 && (
+                <p className={clsStyles.userSearchEmpty}>No users found</p>
+              )}
+              {filteredUsers.map((u) => (
+                <div
+                  key={u.id}
+                  className={`${clsStyles.userSearchItem}${
+                    sentIds.has(u.id) ? ' ' + clsStyles.userSearchItemSent : ''
+                  }`}
+                  onClick={() => {
+                    if (!sentIds.has(u.id)) handleSelectUser(u);
+                  }}
+                >
+                  <Avatar src={u.photoURL} name={u.displayName} size={50} />
+                  <div className={clsStyles.userInfo}>
+                    <h1 className={clsStyles.userName}>{u.displayName}</h1>
+                    <p className={clsStyles.userEmail}>
+                      {sentIds.has(u.id) ? 'Request sent ✓' : u.bio || 'No bio yet'}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className={clsStyles.requestForm}>
+              <div className={clsStyles.requestFormTarget}>
+                <Avatar
+                  src={requestTarget.photoURL}
+                  name={requestTarget.displayName}
+                  size={50}
+                />
                 <div className={clsStyles.userInfo}>
-                  <h1 className={clsStyles.userName}>{u.displayName}</h1>
-                  <p className={clsStyles.userEmail}>{u.bio || 'No bio yet'}</p>
+                  <h1 className={clsStyles.userName}>{requestTarget.displayName}</h1>
+                  <p className={clsStyles.userEmail}>{requestTarget.bio || 'No bio yet'}</p>
                 </div>
               </div>
-            ))}
-          </div>
+              <textarea
+                className={clsStyles.requestInput}
+                placeholder="Add a message (optional)..."
+                value={requestMessage}
+                onChange={(e) => setRequestMessage(e.target.value)}
+                maxLength={200}
+                rows={3}
+                autoFocus
+              />
+              <div className={clsStyles.requestActions}>
+                <button
+                  className={clsStyles.requestBackBtn}
+                  onClick={() => setRequestTarget(null)}
+                >
+                  Back
+                </button>
+                <button
+                  className={clsStyles.requestSendBtn}
+                  onClick={handleSendRequest}
+                  disabled={sending}
+                >
+                  {sending ? 'Sending...' : 'Send Request'}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -117,11 +195,10 @@ export default function ConversationList({
               text: convo.lastMessage ?? '',
               timestamp: convo.updatedAt,
               isOnline: onlineUsers[otherUid]?.online ?? false,
+              unreadCount: convo.unreadCounts?.[user.uid] ?? 0,
             }}
-            isActive={activeConversation?.id === convo.id}
-            onClick={() =>
-              onSelectConversation({ ...convo, otherUid, otherName, otherPhoto })
-            }
+            isActive={activeConversationId === convo.id}
+            onClick={() => onSelectConversation(convo.id)}
           />
         );
       })}

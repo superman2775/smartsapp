@@ -1,0 +1,286 @@
+.container {
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.tab {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tab:hover {
+  color: var(--text-secondary);
+}
+
+.tabActive {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* Badge on tab */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  margin-left: 5px;
+  background: var(--accent);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 9px;
+}
+
+/* List */
+.list {
+  padding: 0;
+}
+
+/* Request item */
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  transition: background 0.15s ease;
+}
+
+.item:hover {
+  background: var(--bg-hover);
+}
+
+/* Info area */
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.message {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 3px 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-style: italic;
+}
+
+.noMessage {
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+/* Actions row */
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.acceptBtn {
+  padding: 6px 16px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.acceptBtn:hover {
+  background: var(--accent-hover);
+  transform: scale(1.02);
+}
+
+.acceptBtn:active {
+  transform: scale(0.97);
+}
+
+.rejectBtn {
+  padding: 6px 16px;
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.rejectBtn:hover {
+  background: var(--bg-hover);
+  color: var(--danger-color);
+  border-color: var(--danger-color);
+}
+
+.cancelBtn {
+  padding: 6px 16px;
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cancelBtn:hover {
+  background: var(--bg-hover);
+  color: var(--danger-color);
+  border-color: var(--danger-color);
+}
+
+/* Confirmation prompt */
+.confirmRow {
+  margin-top: 8px;
+  animation: fadeIn 0.2s ease;
+}
+
+.confirmText {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.confirmYesBtn {
+  padding: 5px 14px;
+  background: var(--danger-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.confirmYesBtn:hover {
+  opacity: 0.85;
+  transform: scale(1.03);
+}
+
+.confirmYesBtn:active {
+  transform: scale(0.96);
+}
+
+.confirmNoBtn {
+  padding: 5px 14px;
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.confirmNoBtn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fadingOut {
+  animation: fadeOut 0.3s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(-12px); }
+}
+
+/* Status badge */
+.statusBadge {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 2px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 10px;
+  letter-spacing: 0.3px;
+}
+
+.statusPending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+[data-theme="dark"] .statusPending {
+  background: #3d3200;
+  color: #ffc107;
+}
+
+.statusAccepted {
+  background: #d4edda;
+  color: #155724;
+}
+
+[data-theme="dark"] .statusAccepted {
+  background: #0d2a14;
+  color: #34c759;
+}
+
+.statusRejected {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+[data-theme="dark"] .statusRejected {
+  background: #2d0f14;
+  color: #ff453a;
+}
+
+.empty {
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+.emptyIcon {
+  margin-bottom: 12px;
+  opacity: 0.4;
+}

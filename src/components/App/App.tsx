@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import NotificationProvider from '../../contexts/NotificationContext';
 import Messenger from '../Messenger/Messenger';
 import Login from '../Login/Login';
 import Onboarding from '../Onboarding/Onboarding';
@@ -52,12 +53,14 @@ export default function App() {
 
   return (
     <div className="App">
-      <Messenger
-        user={user}
-        onProfile={() => setPage('profile')}
-        onPrivacy={() => setPage('privacy')}
-        onTerms={() => setPage('terms')}
-      />
+      <NotificationProvider userId={user.uid}>
+        <Messenger
+          user={user}
+          onProfile={() => setPage('profile')}
+          onPrivacy={() => setPage('privacy')}
+          onTerms={() => setPage('terms')}
+        />
+      </NotificationProvider>
     </div>
   );
 }
