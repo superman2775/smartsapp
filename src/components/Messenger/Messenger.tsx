@@ -234,7 +234,6 @@ export default function Messenger({
             conversations={conversations}
             activeConversationId={activeConversationId}
             onSelectConversation={handleSelectConversation}
-            onSendRequest={() => setView('requests')}
             onlineUsers={onlineUsers}
             newChatTrigger={newChatTrigger}
           />

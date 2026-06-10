@@ -12,7 +12,6 @@ interface Props {
   conversations: Conversation[];
   activeConversationId: string | null;
   onSelectConversation: (convoId: string, tempOtherUid?: string, tempOtherName?: string, tempOtherPhoto?: string) => void;
-  onSendRequest?: () => void;
   onlineUsers: Record<string, OnlineUser>;
   newChatTrigger?: number;
 }
@@ -22,7 +21,6 @@ export default function ConversationList({
   conversations,
   activeConversationId,
   onSelectConversation,
-  onSendRequest,
   onlineUsers,
   newChatTrigger,
 }: Props) {
@@ -68,7 +66,6 @@ export default function ConversationList({
         setSentIds((prev) => new Set(prev).add(requestTarget.id));
         setRequestTarget(null);
         setRequestMessage('');
-        onSendRequest?.();
       } catch (err: unknown) {
         if (err instanceof Error && err.message === 'ALREADY_FRIENDS') {
           alert('You are already friends with this user!');
@@ -80,7 +77,7 @@ export default function ConversationList({
         setSending(false);
       }
     },
-    [user, requestTarget, requestMessage, onSendRequest]
+    [user, requestTarget, requestMessage]
   );
 
   const filteredUsers = allUsers.filter(
