@@ -229,7 +229,7 @@ export default function Messenger({
 
   /* ---- Render ---- */
   return (
-    <div className={styles.messenger}>
+    <>
       {firestoreError && (
         <div className={styles.errorBanner}>
           <AlertTriangle size={16} className={styles.errorIcon} />
@@ -246,81 +246,82 @@ export default function Messenger({
           </button>
         </div>
       )}
-      <Sidebar
-        theme={theme}
-        onToggleTheme={toggleTheme}
-        onNewChat={() => {
-          setView('chats');
-          setNewChatTrigger((n) => n + 1);
-        }}
-        onRequests={() => setView('requests')}
-        onChats={() => setView('chats')}
-        onProfile={onProfile}
-        onPrivacy={onPrivacy}
-        onLogout={logout}
-        pendingRequestCount={pendingIncomingCount}
-        unreadMessageCount={totalUnreadMessages}
-      />
+      <div className={styles.messenger}>
+        <Sidebar
+          theme={theme}
+          onToggleTheme={toggleTheme}
+          onNewChat={() => {
+            setView('chats');
+            setNewChatTrigger((n) => n + 1);
+          }}
+          onRequests={() => setView('requests')}
+          onChats={() => setView('chats')}
+          onProfile={onProfile}
+          onPrivacy={onPrivacy}
+          onLogout={logout}
+          pendingRequestCount={pendingIncomingCount}
+          unreadMessageCount={totalUnreadMessages}
+        />
 
-      <div className={`${styles.scrollable} ${styles.sidebar}`}>
-        {view === 'requests' ? (
-          <FriendRequests
-            user={user}
-            requests={friendRequests}
-            onAccept={handleAccept}
-            onReject={handleReject}
-            onCancel={handleCancel}
-          />
-        ) : (
-          <ConversationList
-            user={user}
-            conversations={conversations}
-            activeConversationId={activeConversationId}
-            onSelectConversation={handleSelectConversation}
-            onlineUsers={onlineUsers}
-            newChatTrigger={newChatTrigger}
-          />
-        )}
-      </div>
-
-      <div className={`${styles.scrollable} ${styles.content}`}>
-        {activeConversation && view === 'chats' ? (
-          <MessageList
-            user={user}
-            conversation={activeConversation}
-            lastViewedAt={lastViewedTimes[activeConversation.id]}
-            isOtherOnline={
-              onlineUsers[activeConversation.otherUid ?? '']?.online ?? false
-            }
-          />
-        ) : (
-          <div className={styles.noConversation}>
-            <MessageCircle
-              size={80}
-              style={{ color: 'var(--text-dim)' }}
-              strokeWidth={1}
+        <div className={`${styles.scrollable} ${styles.sidebar}`}>
+          {view === 'requests' ? (
+            <FriendRequests
+              user={user}
+              requests={friendRequests}
+              onAccept={handleAccept}
+              onReject={handleReject}
+              onCancel={handleCancel}
             />
-            <h2>
-              {view === 'requests'
-                ? pendingIncomingCount > 0
-                  ? `${pendingIncomingCount} pending friend request${pendingIncomingCount > 1 ? 's' : ''}`
-                  : 'Friend Requests'
-                : 'Select a conversation'}
-            </h2>
-            <p>
-              {view === 'requests'
-                ? 'Accept or decline incoming friend requests'
-                : 'Choose a chat from the sidebar or start a new one'}
-            </p>
-          </div>
-        )}
-      </div>
+          ) : (
+            <ConversationList
+              user={user}
+              conversations={conversations}
+              activeConversationId={activeConversationId}
+              onSelectConversation={handleSelectConversation}
+              onlineUsers={onlineUsers}
+              newChatTrigger={newChatTrigger}
+            />
+          )}
+        </div>
 
+        <div className={`${styles.scrollable} ${styles.content}`}>
+          {activeConversation && view === 'chats' ? (
+            <MessageList
+              user={user}
+              conversation={activeConversation}
+              lastViewedAt={lastViewedTimes[activeConversation.id]}
+              isOtherOnline={
+                onlineUsers[activeConversation.otherUid ?? '']?.online ?? false
+              }
+            />
+          ) : (
+            <div className={styles.noConversation}>
+              <MessageCircle
+                size={80}
+                style={{ color: 'var(--text-dim)' }}
+                strokeWidth={1}
+              />
+              <h2>
+                {view === 'requests'
+                  ? pendingIncomingCount > 0
+                    ? `${pendingIncomingCount} pending friend request${pendingIncomingCount > 1 ? 's' : ''}`
+                    : 'Friend Requests'
+                  : 'Select a conversation'}
+              </h2>
+              <p>
+                {view === 'requests'
+                  ? 'Accept or decline incoming friend requests'
+                  : 'Choose a chat from the sidebar or start a new one'}
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
       <Toast
         toasts={toasts}
         dismissingIds={dismissingIds}
         onClick={onToastClick}
       />
-    </div>
+    </>
   );
 }

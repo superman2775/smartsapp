@@ -10,7 +10,7 @@
 
 .scrollable {
   position: relative;
-  overflow-y: auto;
+  overflow: hidden auto;
   -webkit-overflow-scrolling: touch;
 }
 
