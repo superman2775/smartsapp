@@ -262,7 +262,7 @@ export default function Messenger({
         unreadMessageCount={totalUnreadMessages}
       />
 
-      <div className={`${styles.scrollable} ${styles.sidebar}`}>
+      <div key={view} className={`${styles.scrollable} ${styles.sidebar}`}>
         {view === 'requests' ? (
           <FriendRequests
             user={user}
