@@ -26,40 +26,50 @@ export function getConversationId(uid1: string, uid2: string): string {
 /** Listen to all conversations for the current user */
 export function subscribeConversations(
   userId: string,
-  callback: (convos: Conversation[]) => void
+  callback: (convos: Conversation[]) => void,
+  onError?: (error: Error) => void
 ): Unsubscribe {
   const q = query(
     collection(db, 'conversations'),
     where('participants', 'array-contains', userId)
   );
-  return onSnapshot(q, (snapshot) => {
-    const convos = snapshot.docs
-      .map((d) => ({ id: d.id, ...d.data() } as Conversation))
-      .sort((a, b) => {
-        const aTime = a.updatedAt?.toMillis?.() ?? 0;
-        const bTime = b.updatedAt?.toMillis?.() ?? 0;
-        return bTime - aTime;
-      });
-    callback(convos);
-  });
+  return onSnapshot(
+    q,
+    (snapshot) => {
+      const convos = snapshot.docs
+        .map((d) => ({ id: d.id, ...d.data() } as Conversation))
+        .sort((a, b) => {
+          const aTime = a.updatedAt?.toMillis?.() ?? 0;
+          const bTime = b.updatedAt?.toMillis?.() ?? 0;
+          return bTime - aTime;
+        });
+      callback(convos);
+    },
+    onError
+  );
 }
 
 /** Listen to messages in a conversation */
 export function subscribeMessages(
   conversationId: string,
-  callback: (msgs: Message[]) => void
+  callback: (msgs: Message[]) => void,
+  onError?: (error: Error) => void
 ): Unsubscribe {
   const q = query(
     collection(db, 'conversations', conversationId, 'messages'),
     orderBy('timestamp', 'asc')
   );
-  return onSnapshot(q, (snapshot) => {
-    const msgs = snapshot.docs.map((d) => ({
-      id: d.id,
-      ...d.data(),
-    })) as Message[];
-    callback(msgs);
-  });
+  return onSnapshot(
+    q,
+    (snapshot) => {
+      const msgs = snapshot.docs.map((d) => ({
+        id: d.id,
+        ...d.data(),
+      })) as Message[];
+      callback(msgs);
+    },
+    onError
+  );
 }
 
 /** Send a message in a transaction (atomic read + write). Increments unread counts for other participants. */
@@ -165,16 +175,21 @@ export async function getAllUsers(
 
 /** Subscribe to all users' online status */
 export function subscribeUsers(
-  callback: (users: Record<string, OnlineUser>) => void
+  callback: (users: Record<string, OnlineUser>) => void,
+  onError?: (error: Error) => void
 ): Unsubscribe {
   const q = query(collection(db, 'users'), limit(50));
-  return onSnapshot(q, (snapshot) => {
-    const users: Record<string, OnlineUser> = {};
-    snapshot.docs.forEach((d) => {
-      users[d.id] = { id: d.id, ...d.data() };
-    });
-    callback(users);
-  });
+  return onSnapshot(
+    q,
+    (snapshot) => {
+      const users: Record<string, OnlineUser> = {};
+      snapshot.docs.forEach((d) => {
+        users[d.id] = { id: d.id, ...d.data() };
+      });
+      callback(users);
+    },
+    onError
+  );
 }
 
 /** Set typing indicator in a conversation */
@@ -285,28 +300,34 @@ export async function cancelFriendRequest(requestId: string): Promise<void> {
 /** Subscribe to friend requests involving the current user */
 export function subscribeFriendRequests(
   userId: string,
-  callback: (requests: FriendRequest[]) => void
+  callback: (requests: FriendRequest[]) => void,
+  onError?: (error: Error) => void
 ): Unsubscribe {
   const q = query(
     collection(db, 'friendRequests'),
     where('participants', 'array-contains', userId)
   );
-  return onSnapshot(q, (snapshot) => {
-    const requests = snapshot.docs
-      .map((d) => ({ id: d.id, ...d.data() } as FriendRequest))
-      .sort((a, b) => {
-        const aTime = a.updatedAt?.toMillis?.() ?? 0;
-        const bTime = b.updatedAt?.toMillis?.() ?? 0;
-        return bTime - aTime;
-      });
-    callback(requests);
-  });
+  return onSnapshot(
+    q,
+    (snapshot) => {
+      const requests = snapshot.docs
+        .map((d) => ({ id: d.id, ...d.data() } as FriendRequest))
+        .sort((a, b) => {
+          const aTime = a.updatedAt?.toMillis?.() ?? 0;
+          const bTime = b.updatedAt?.toMillis?.() ?? 0;
+          return bTime - aTime;
+        });
+      callback(requests);
+    },
+    onError
+  );
 }
 
 /** Subscribe to typing indicators in a conversation */
 export function subscribeTyping(
   conversationId: string,
-  callback: (typing: Record<string, { timestamp: unknown }>) => void
+  callback: (typing: Record<string, { timestamp: unknown }>) => void,
+  onError?: (error: Error) => void
 ): Unsubscribe {
   return onSnapshot(
     collection(db, 'conversations', conversationId, 'typing'),
@@ -316,6 +337,7 @@ export function subscribeTyping(
         typing[d.id] = d.data();
       });
       callback(typing);
-    }
+    },
+    onError
   );
 }

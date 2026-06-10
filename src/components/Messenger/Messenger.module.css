@@ -48,3 +48,52 @@
   font-size: 14px;
   color: var(--text-dim);
 }
+
+/* ── Firestore error banner ── */
+.errorBanner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: #451a03;
+  border-bottom: 1px solid #b45309;
+  color: #fbbf24;
+  font-size: 13px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.errorIcon {
+  flex-shrink: 0;
+  color: #f59e0b;
+}
+
+.errorText {
+  flex: 1;
+  line-height: 1.4;
+}
+
+.errorDismiss {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #fbbf24;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.15s, background 0.15s;
+}
+
+.errorDismiss:hover {
+  opacity: 1;
+  background: rgba(251, 191, 36, 0.15);
+}

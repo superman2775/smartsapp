@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
-import { MessageCircle } from 'lucide-react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { AlertTriangle, MessageCircle, X } from 'lucide-react';
 import Sidebar from '../Sidebar/Sidebar';
 import ConversationList from '../ConversationList/ConversationList';
 import FriendRequests from '../FriendRequests/FriendRequests';
@@ -57,6 +57,8 @@ export default function Messenger({
     Record<string, Date>
   >({});
   const [view, setView] = useState<'chats' | 'requests'>('chats');
+  const [firestoreError, setFirestoreError] = useState<string | null>(null);
+  const errorDismissedRef = useRef(false);
 
   const { logout } = useAuth();
   const { theme, toggle: toggleTheme } = useTheme();
@@ -82,12 +84,37 @@ export default function Messenger({
 
   /* ---- Firestore subscriptions ---- */
   useEffect(() => {
-    const unsubscribe = subscribeConversations(user.uid, setConversations);
+    const unsubscribe = subscribeConversations(
+      user.uid,
+      setConversations,
+      (err) => {
+        console.error('subscribeConversations error:', err);
+        if (!errorDismissedRef.current) {
+          setFirestoreError(
+            err.code === 'permission-denied'
+              ? 'Firestore permission denied. Deploy the security rules to fix this.'
+              : `Failed to load conversations: ${err.message}`
+          );
+        }
+      }
+    );
     return unsubscribe;
   }, [user.uid]);
 
   useEffect(() => {
-    const unsubscribe = subscribeUsers(setOnlineUsers);
+    const unsubscribe = subscribeUsers(
+      setOnlineUsers,
+      (err) => {
+        console.error('subscribeUsers error:', err);
+        if (!errorDismissedRef.current) {
+          setFirestoreError(
+            err.code === 'permission-denied'
+              ? 'Firestore permission denied. Deploy the security rules to fix this.'
+              : `Failed to load users: ${err.message}`
+          );
+        }
+      }
+    );
     return unsubscribe;
   }, []);
 
@@ -203,6 +230,22 @@ export default function Messenger({
   /* ---- Render ---- */
   return (
     <div className={styles.messenger}>
+      {firestoreError && (
+        <div className={styles.errorBanner}>
+          <AlertTriangle size={16} className={styles.errorIcon} />
+          <span className={styles.errorText}>{firestoreError}</span>
+          <button
+            className={styles.errorDismiss}
+            onClick={() => {
+              errorDismissedRef.current = true;
+              setFirestoreError(null);
+            }}
+            title="Dismiss"
+          >
+            <X size={14} />
+          </button>
+        </div>
+      )}
       <Sidebar
         theme={theme}
         onToggleTheme={toggleTheme}

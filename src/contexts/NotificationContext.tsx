@@ -84,7 +84,13 @@ export default function NotificationProvider({
 
   /* ---- Live friend-request subscription ---- */
   useEffect(() => {
-    const unsubscribe = subscribeFriendRequests(userId, setFriendRequests);
+    const unsubscribe = subscribeFriendRequests(
+      userId,
+      setFriendRequests,
+      (err) => {
+        console.error('subscribeFriendRequests error:', err);
+      }
+    );
     return unsubscribe;
   }, [userId]);
 

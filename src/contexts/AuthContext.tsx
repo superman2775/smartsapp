@@ -47,7 +47,10 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         };
         // Check if user has completed onboarding
         const userDocRef = doc(db, 'users', firebaseUser.uid);
-        const userSnap = await getDoc(userDocRef).catch(() => null);
+        const userSnap = await getDoc(userDocRef).catch((err) => {
+          console.error('Failed to read user doc:', err);
+          return null;
+        });
         const existingData = userSnap?.exists() ? userSnap.data() : {};
 
         // For completed profiles, preserve custom photo/name in Firestore

@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Users collection ──
+    // Anyone authenticated can read user profiles (needed for user search).
+    // Users can only write their own document.
+    match /users/{userId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // ── Conversations collection ──
+    // Only participants can read/write.  For creates the incoming document
+    // must include the requesting user in participants; for existing docs
+    // the stored document must already include them.
+    match /conversations/{convoId} {
+      allow read, write: if request.auth != null
+        && (resource == null || request.auth.uid in resource.data.participants)
+        && (request.resource == null || request.auth.uid in request.resource.data.participants);
+
+      // ── Messages subcollection ──
+      match /messages/{messageId} {
+        allow read, write: if request.auth != null
+          && request.auth.uid in get(/databases/$(database)/documents/conversations/$(convoId)).data.participants;
+      }
+
+      // ── Typing indicators subcollection ──
+      match /typing/{userId} {
+        allow read, write: if request.auth != null
+          && request.auth.uid in get(/databases/$(database)/documents/conversations/$(convoId)).data.participants;
+      }
+    }
+
+    // ── Friend Requests collection ──
+    // Only participants can read/write.
+    match /friendRequests/{requestId} {
+      allow read, write: if request.auth != null
+        && (resource == null || request.auth.uid in resource.data.participants)
+        && (request.resource == null || request.auth.uid in request.resource.data.participants);
+    }
+
+  }
+}
