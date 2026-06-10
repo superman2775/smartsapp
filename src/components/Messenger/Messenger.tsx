@@ -57,7 +57,6 @@ export default function Messenger({
     Record<string, Date>
   >({});
   const [view, setView] = useState<'chats' | 'requests'>('chats');
-  const [closeSearchTrigger, setCloseSearchTrigger] = useState(0);
   const [firestoreError, setFirestoreError] = useState<string | null>(null);
   const errorDismissedRef = useRef(false);
 
@@ -180,7 +179,6 @@ export default function Messenger({
 
       setActiveConversationId(convoId);
       setView('chats');
-      setNewChatTrigger(0);
       setLastViewedTimes((prev) => ({ ...prev, [convoId]: new Date() }));
       markConversationRead(convoId, uid);
     },
@@ -255,16 +253,8 @@ export default function Messenger({
           setView('chats');
           setNewChatTrigger((n) => n + 1);
         }}
-        onRequests={() => {
-          setView('requests');
-          setNewChatTrigger(0);
-          setCloseSearchTrigger((n) => n + 1);
-        }}
-        onChats={() => {
-          setView('chats');
-          setNewChatTrigger(0);
-          setCloseSearchTrigger((n) => n + 1);
-        }}
+        onRequests={() => setView('requests')}
+        onChats={() => setView('chats')}
         onProfile={onProfile}
         onPrivacy={onPrivacy}
         onLogout={logout}
@@ -289,7 +279,6 @@ export default function Messenger({
             onSelectConversation={handleSelectConversation}
             onlineUsers={onlineUsers}
             newChatTrigger={newChatTrigger}
-            closeSearchTrigger={closeSearchTrigger}
           />
         )}
       </div>

@@ -53,7 +53,7 @@
 .errorBanner {
   position: fixed;
   top: 0;
-  left: 56px;
+  left: 0;
   right: 0;
   z-index: 1000;
   display: flex;

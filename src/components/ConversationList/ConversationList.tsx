@@ -14,7 +14,6 @@ interface Props {
   onSelectConversation: (convoId: string, tempOtherUid?: string, tempOtherName?: string, tempOtherPhoto?: string) => void;
   onlineUsers: Record<string, OnlineUser>;
   newChatTrigger?: number;
-  closeSearchTrigger?: number;
 }
 
 export default function ConversationList({
@@ -24,7 +23,6 @@ export default function ConversationList({
   onSelectConversation,
   onlineUsers,
   newChatTrigger,
-  closeSearchTrigger,
 }: Props) {
   const [showUserSearch, setShowUserSearch] = useState(false);
   const [allUsers, setAllUsers] = useState<OnlineUser[]>([]);
@@ -49,14 +47,6 @@ export default function ConversationList({
   useEffect(() => {
     if (newChatTrigger) handleOpenNewChatRef.current();
   }, [newChatTrigger]);
-
-  // Force-close the search panel when parent signals (e.g. logo clicked)
-  useEffect(() => {
-    if (closeSearchTrigger) {
-      setShowUserSearch(false);
-      setRequestTarget(null);
-    }
-  }, [closeSearchTrigger]);
 
   const handleSelectUser = useCallback((otherUser: OnlineUser) => {
     setRequestTarget(otherUser);
